@@ -1,0 +1,31 @@
+
+CASE: case_33
+USER: user_18
+EMAIL: ingrid.dahl@outlook.com
+AUDIT DATE: 2026-07-19 13:00 UTC
+
+IDENTITY:
+- User identity found.
+- No historical email/phone audit entries found.
+
+IMPORTANT RESOURCES:
+- export_1260
+- export_1842
+- search_2352
+
+EVIDENCE:
+- evidence_18: PDF customer statement containing personal data on 18 July.
+- evidence_23: Screenshot showing export_1260 as Ready on 18 June.
+- evidence_20, 21, 22, 24: No exact identifier matches.
+- evidence_01: Five matches from 15 September, after audit date.
+
+SYSTEM ACTIVITY:
+- activity_4004: export_1260 linked to user_18.
+- activity_4009: export_1842 linked to user_18.
+- activity_3328: Partial deletion of export_1260 on 19 August.
+- activity_3331: Partial deletion of search_2352 on 19 August.
+
+CONCLUSION:
+- Evidence indicates personal data remained in a customer statement on 18 July.
+- Deletion completion by the audit date is not established.
+- Further verification and remediation are required.
