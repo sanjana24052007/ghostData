@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Data | Audit Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="brand">
+            <span class="brand-icon">G</span>
+            <div>
+                <h2>GHOST DATA</h2>
+                <small>AUDIT AGENT</small>
+            </div>
+        </div>
+
+        <nav>
+            <a href="#overview" class="active">◈ Dashboard</a>
+            <a href="#risk">⚠ Risk Analysis</a>
+            <a href="#investigations">⌕ Investigations</a>
+            <a href="#evidence">▤ Evidence</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <span class="status-dot"></span>
+            READ-ONLY MODE
+        </div>
+    </div>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">SECURITY / DATA PRIVACY</p>
+                <h1>Ghost Data Audit Dashboard</h1>
+                <p class="subtitle">
+                    Detecting personal data that may remain after deletion.
+                </p>
+            </div>
+
+            <div class="top-status">
+                <span class="status-dot"></span>
+                AUDIT SYSTEM ACTIVE
+            </div>
+        </header>
+
+
+        {% if missing %}
+        <div class="notice">
+            Audit reports are missing. Run
+            <code>python code/main.py</code> first.
+        </div>
+        {% else %}
+
+
+        <section id="overview">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">OVERVIEW</p>
+                    <h2>Audit Summary</h2>
+                </div>
+                <span class="readonly-tag">● READ ONLY</span>
+            </div>
+
+
+            <div class="stats-grid">
+
+                <div class="stat-card total-card">
+                    <p>TOTAL CASES</p>
+                    <h2>{{ total }}</h2>
+                    <span>Deletion requests investigated</span>
+                </div>
+
+                <div class="stat-card high-card">
+                    <p>HIGH RISK</p>
+                    <h2>{{ counts['HIGH'] }}</h2>
+                    <span>Requires priority investigation</span>
+                </div>
+
+                <div class="stat-card medium-card">
+                    <p>MEDIUM RISK</p>
+                    <h2>{{ counts['MEDIUM'] }}</h2>
+                    <span>Activity references found</span>
+                </div>
+
+                <div class="stat-card low-card">
+                    <p>LOW RISK</p>
+                    <h2>{{ counts['LOW'] }}</h2>
+                    <span>No suspicious evidence found</span>
+                </div>
+
+                <div class="stat-card review-card">
+                    <p>REVIEW</p>
+                    <h2>{{ counts['REVIEW'] }}</h2>
+                    <span>Identity requires review</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section id="risk" class="panel">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">ANALYTICS</p>
+                    <h2>Risk Distribution</h2>
+                </div>
+            </div>
+
+            {% for level in ['HIGH', 'MEDIUM', 'LOW', 'REVIEW'] %}
+
+            <div class="risk-row">
+                <div class="risk-label">
+                    <span>{{ level }}</span>
+                    <strong>{{ counts[level] }}</strong>
+                </div>
+
+                <div class="progress-track">
+                    <div class="progress-fill {{ level|lower }}"
+                         style="width: {{ (counts[level] / total * 100) if total else 0 }}%">
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </section>
+
+
+        <section id="investigations" class="panel">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">PRIORITY CASES</p>
+                    <h2>High-Risk Investigations</h2>
+                </div>
+
+                <span class="count-tag">
+                    {{ high_cases|length }} CASES
+                </span>
+            </div>
+
+            <input type="text"
+                   id="highSearch"
+                   class="search-box"
+                   placeholder="Search high-risk cases...">
+
+            <div class="table-container">
+
+                <table id="highTable">
+                    <thead>
+                        <tr>
+                            <th>CASE ID</th>
+                            <th>USER ID</th>
+                            <th>RISK LEVEL</th>
+                            <th>REASON</th>
+                            <th>EXPORTS</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for case in high_cases %}
+                        <tr>
+                            <td>{{ case.case_id }}</td>
+                            <td>{{ case.user_id }}</td>
+                            <td>
+                                <span class="risk-badge high">HIGH</span>
+                            </td>
+                            <td>{{ case.reason }}</td>
+                            <td>{{ case.exports }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="empty">
+                                No high-risk cases found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <section id="evidence" class="panel">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">INVESTIGATION RECORDS</p>
+                    <h2>Detailed Evidence</h2>
+                </div>
+
+                <span class="count-tag">
+                    {{ evidence|length }} RECORDS
+                </span>
+            </div>
+
+            <input type="text"
+                   id="evidenceSearch"
+                   class="search-box"
+                   placeholder="Search evidence records...">
+
+            <div class="table-container">
+
+                <table id="evidenceTable">
+                    <thead>
+                        <tr>
+                            <th>CASE ID</th>
+                            <th>USER ID</th>
+                            <th>RESOURCE ID</th>
+                            <th>TIMESTAMP</th>
+                            <th>EVIDENCE FILE</th>
+                            <th>LOG DETAILS</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in evidence %}
+                        <tr>
+                            <td>{{ item.case_id }}</td>
+                            <td>{{ item.user_id }}</td>
+                            <td>{{ item.resource_id }}</td>
+                            <td>{{ item.timestamp }}</td>
+                            <td>{{ item.file }}</td>
+                            <td>
+                                <details>
+                                    <summary>View evidence</summary>
+                                    <code>{{ item.line }}</code>
+                                </details>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="empty">
+                                No detailed evidence records available.
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <section class="panel downloads">
+
+            <div>
+                <p class="eyebrow">EXPORT CENTER</p>
+                <h2>Download Audit Reports</h2>
+                <p class="subtitle">
+                    Download the generated CSV reports for further analysis.
+                </p>
+            </div>
+
+            <div class="download-links">
+                <a href="/download/audit_results.csv">↓ All Audit Results</a>
+                <a href="/download/high_risk_report.csv">↓ High-Risk Report</a>
+                <a href="/download/detailed_evidence_report.csv">↓ Evidence Report</a>
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+        <footer>
+            GHOST DATA AUDIT AGENT · READ-ONLY INVESTIGATION SYSTEM
+            <br>
+            Findings require human verification. No source data is modified.
+        </footer>
+
+    </main>
+
+</body>
+</html>
