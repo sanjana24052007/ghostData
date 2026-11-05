@@ -26,7 +26,8 @@
         <nav>
             <a href="#overview" class="active">◈ Dashboard</a>
             <a href="#risk">⚠ Risk Analysis</a>
-            <a href="#investigations">⌕ Investigations</a>
+            <a href="#all-cases">▤ Case Investigations</a>
+            <a href="#investigations">⌕ Priority Cases</a>
             <a href="#evidence">▤ Evidence</a>
         </nav>
 
@@ -136,6 +137,86 @@
             </div>
 
             {% endfor %}
+
+        </section>
+        
+        <section id="all-cases" class="panel">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">COMPLETE AUDIT RECORDS</p>
+                    <h2>Case Investigation Details</h2>
+                    <p class="subtitle">
+                        Detailed findings and recommended actions for every case.
+                    </p>
+                </div>
+            <span class="count-tag">
+                {{ cases|length }} CASES
+            </span>
+
+    <input type="text"
+           id="caseSearch"
+           class="search-box"
+           placeholder="Search by Case ID, User ID or Resource Type...">
+
+    <div class="table-container">
+
+            <table id="caseTable">
+
+                <thead>
+                    <tr>
+                        <th>CASE ID</th>
+                        <th>USER ID</th>
+                        <th>DELETION REQUEST DATE</th>
+                        <th>DETECTION DATE</th>
+                        <th>RESOURCE TYPE</th>
+                        <th>RISK SCORE</th>
+                        <th>REASON FOR DETECTION</th>
+                        <th>EVIDENCE SOURCE</th>
+                        <th>RECOMMENDED ACTION</th>
+                    </tr>
+                </thead>
+
+                    <tbody>
+
+                        {% for case in cases %}
+                        <tr>
+
+                            <td>{{ case.case_id }}</td>
+
+                            <td>{{ case.user_id }}</td>
+
+                            <td>{{ case.deletion_date }}</td>
+
+                            <td>{{ case.detection_date }}</td>
+
+                            <td>{{ case.resource_type }}</td>
+
+                            <td>
+                                <strong>{{ case.risk_score }}</strong>
+                            </td>
+
+                            <td>{{ case.reason }}</td>
+
+                            <td>{{ case.evidence_source }}</td>
+
+                            <td>{{ case.recommended_action }}</td>
+
+                        </tr>
+
+                        {% else %}
+                        <tr>
+                            <td colspan="9" class="empty">
+                                No case records available.
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </section>
 
