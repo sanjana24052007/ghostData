@@ -7,3 +7,5 @@ audit_results.csv
 high_risk_report.csv
 detailed_evidence_report.csv
 log.txt
+__pycache__/
+*.py[cod]

@@ -1,10 +1,20 @@
-
 import csv
+import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+CODE_DIR = ROOT / "code"
+DATASET_DIR = ROOT / "dataset"
+RESULTS_DIR = ROOT / "results"
+
+# Allow this script to import modules from code/
+sys.path.insert(0, str(CODE_DIR))
+
 from identity_resolver import read_csv, resolve_identity
 from evidence_scanner import scan_evidence
 
-ROOT = Path(__file__).resolve().parent.parent
+
+RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 requests = read_csv("deletion_requests.csv")
 all_results = []
@@ -26,15 +36,20 @@ for request in requests:
             match["case_id"] = case_id
             all_results.append(match)
 
-output = ROOT / "all_evidence_matches.csv"
+
+output = RESULTS_DIR / "all_evidence_matches.csv"
 
 fields = [
-    "case_id", "evidence_id", "file_path",
-    "identifier", "line_number", "content"
+    "case_id",
+    "evidence_id",
+    "file_path",
+    "identifier",
+    "line_number",
+    "content"
 ]
 
-with open(output, "w", newline="", encoding="utf-8") as f:
-    writer = csv.DictWriter(f, fieldnames=fields)
+with open(output, "w", newline="", encoding="utf-8") as file:
+    writer = csv.DictWriter(file, fieldnames=fields)
     writer.writeheader()
     writer.writerows(all_results)
 

@@ -964,8 +964,9 @@ def main():
         "evidence_source",
         "recommended_action"
     ]
-
-    report_path = ROOT / "audit_results.csv"
+    RESULTS_DIR = ROOT / "results"
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    report_path = RESULTS_DIR / "audit_results.csv"
 
     with open(
         report_path,
@@ -991,7 +992,7 @@ def main():
         if case["risk_level"] == "HIGH"
     ]
 
-    high_report = ROOT / "high_risk_report.csv"
+    high_report = ROOT / "results" / "high_risk_report.csv"
 
     with open(
         high_report,
@@ -1024,7 +1025,7 @@ def main():
         "reason"
     ]
 
-    evidence_report = ROOT / "detailed_evidence_report.csv"
+    evidence_report = ROOT / "results" / "detailed_evidence_report.csv"
 
     with open(
         evidence_report,

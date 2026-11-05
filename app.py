@@ -107,10 +107,9 @@ def normalize_evidence(row):
 def dashboard():
 
     # Read source reports
-    audit_rows = read_csv("audit_results.csv")
-    high_rows = read_csv("high_risk_report.csv")
-    evidence_rows = read_csv("detailed_evidence_report.csv")
-
+    audit_rows = read_csv("results/audit_results.csv")
+    high_rows = read_csv("results/high_risk_report.csv")
+    evidence_rows = read_csv("results/detailed_evidence_report.csv")
     deletion_rows = read_csv(
         "dataset/deletion_requests.csv"
     )
@@ -211,7 +210,7 @@ def dashboard():
 
     # Check whether main report exists
     missing = not (
-        ROOT / "audit_results.csv"
+        ROOT /"results" / "audit_results.csv"
     ).exists()
 
     # Render dashboard
@@ -229,22 +228,21 @@ def dashboard():
 # --------------------------------------------------
 # 6. DOWNLOAD REPORTS
 # --------------------------------------------------
-
 @app.route("/download/<filename>")
 def download(filename):
-
     if filename not in REPORTS:
         abort(404)
 
-    file_path = ROOT / filename
+    file_path = ROOT / "results" / filename
 
-    if not file_path.exists():
+    if not file_path.is_file():
         abort(404)
 
     return send_file(
         file_path,
         as_attachment=True
     )
+
 
 
 # --------------------------------------------------
